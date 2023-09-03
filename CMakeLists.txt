@@ -13,6 +13,7 @@ find_package(PkgConfig)
 pkg_check_modules(gtk4 REQUIRED IMPORTED_TARGET gtk4>=4.11.3)
 pkg_check_modules(libadwaita REQUIRED IMPORTED_TARGET libadwaita-1>=1.4)
 pkg_check_modules(libsoup IMPORTED_TARGET libsoup-3.0)
+pkg_search_module(GLIB REQUIRED glib-2.0)
 
 find_program(GLIB_COMPILE_RESOURCES NAMES glib-compile-resources REQUIRED)
 
@@ -36,6 +37,7 @@ include_directories(
     "${LAGOM_BINARY_DIR}"
     "${LAGOM_BINARY_DIR}/Userland/Libraries"
     "${LAGOM_BINARY_DIR}/Userland/Services"
+    "${GLIB_INCLUDE_DIRS}"
 )
 add_compile_definitions(AK_DONT_REPLACE_STD)
 
@@ -104,7 +106,7 @@ set(SOURCES
 add_subdirectory(po)
 
 add_executable(ladybird ${SOURCES})
-target_link_libraries(ladybird PRIVATE PkgConfig::gtk4 PkgConfig::libadwaita Lagom::Core Lagom::WebView Lagom::Gfx Lagom::Web Lagom::IPC Lagom::FileSystem Lagom::Protocol)
+target_link_libraries(ladybird PRIVATE PkgConfig::gtk4 PkgConfig::libadwaita Lagom::Core Lagom::WebView Lagom::Gfx Lagom::Web Lagom::IPC Lagom::FileSystem Lagom::Protocol ${GLIB_LDFLAGS})
 
 if (libsoup_FOUND)
     target_link_libraries(ladybird PRIVATE PkgConfig::libsoup)
